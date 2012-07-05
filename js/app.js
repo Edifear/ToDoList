@@ -34,7 +34,15 @@
                 var id = task.find('.task-title').attr('id').slice(5);
                 task.slideUp('slow', function(){task.remove()});
                 delete ToDoList['task-'+id];
+                uploadToDo();
             }
+
+            function changeStatusTask(task, status){
+                var id = task.find('.task-title').attr('id').slice(5);
+                ToDoList['task-'+id].status = status;
+                uploadToDo();
+            }
+
 
             function fillList(){
                 var keys = Object.keys(ToDoList);
@@ -42,17 +50,26 @@
                     if (keys[j].slice(0, 4) != 'task') continue;
                     var title = ToDoList[keys[j]].value;
                     var id = ToDoList[keys[j]].id;
+                    var status = ToDoList[keys[j]].status;
 
-                    addListTask(title, id);
+                    addListTask(title, id, status);
                 }
             }
 
-            function addListTask(title, id){
-                var checkbox = "<input type='checkbox' class='toggle'>";
+            function addListTask(title, id, status){
+                if (status == 'done') {
+                    var checked = 'checked';
+                    var done = " class='done'";
+                } else {
+                    var checked = '';
+                    var done = '';
+                }
+
+                var checkbox = "<input type='checkbox' class='toggle "+checked+"' "+checked+">";
                 var span = "<span id='task-"+id+"' class='task-title'>"+title+"</span>";
                 var remove = "<a href='#' class='remove'>delete</a>";
+                var task = list.append("<li"+done+">"+checkbox+span+remove+"</li>");
 
-                list.append("<li>"+checkbox+span+remove+"</li>");
             }
 
         //-- create new task
@@ -62,8 +79,8 @@
                 if (!typedTask) return;
 
                 i = ToDoList.counter;
-                ToDoList['task-'+i] = {id: i, value: typedTask};
-                addListTask(typedTask, i);
+                ToDoList['task-'+i] = {id: i, value: typedTask, status: 'non-completed'};
+                addListTask(typedTask, i, 'non-completed');
                 ToDoList.counter++;
 
                 uploadToDo();
@@ -76,7 +93,6 @@
                 e.preventDefault();
                 var task = $(this).parent();
                 removeTask(task);
-                uploadToDo();
             });
 
         //-- done task
@@ -84,7 +100,13 @@
                 var task = $(this).parent();
                 $(this).toggleClass('checked');
                 task.toggleClass('done');
-                uploadToDo();
+
+                if ($(this).hasClass('checked')) {
+                    var status = 'done';
+                } else {
+                    var status = 'non-completed'
+                }
+                changeStatusTask(task, status);
             });
         };
 
