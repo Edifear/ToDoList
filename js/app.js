@@ -30,7 +30,13 @@
                 localStorage.setItem( 'ToDo', JSON.stringify(ToDoList) );
             }
 
-           function fillList(){
+            function removeTask(task){
+                var id = task.find('.task-title').attr('id').slice(5);
+                task.slideUp('slow', function(){task.remove()});
+                delete ToDoList['task-'+id];
+            }
+
+            function fillList(){
                 var keys = Object.keys(ToDoList);
                 for (var j = 0; j < keys.length; j++) {
                     if (keys[j].slice(0, 4) != 'task') continue;
@@ -68,13 +74,18 @@
         //-- delete task
             list.find('.remove').live('click', function(e){
                 e.preventDefault();
-                var taskId = $(this).siblings('.task-title').attr('id').slice(5);
-                $(this).parent().remove();
-
-                delete ToDoList['task-'+taskId];
+                var task = $(this).parent();
+                removeTask(task);
                 uploadToDo();
             });
 
+        //-- done task
+            list.find('.toggle').live('click', function(e){
+                var task = $(this).parent();
+                $(this).toggleClass('checked');
+                task.toggleClass('done');
+                uploadToDo();
+            });
         };
 
         $('.ToDo').ToDoList();

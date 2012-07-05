@@ -12,31 +12,9 @@
 .txt-dec-lt {text-decoration:line-through;}
 .txt-dec-u, .hover-u:hover, .txt-dec-n:hover {text-decoration:underline;}
 .txt-dec-n, .txt-dec-u:hover {text-decoration:none}
-
-.inline-list li {
-    display: inline-block;
-    float: left;
-}
-.inline-list .no-inline-list li{
-    display: block;
-    float:none;
-}
-.inline-list:before, .inline-list:after, .clearfix:before, .clearfix:after { content: "\0020"; display: block; height: 0; overflow: hidden; }
-.inline-list:after, .clearfix:after { clear: both; }
-.inline-list, .clearfix { zoom: 1; }
-
-.bordered {border:1px solid #000}
-.bordered_top {border-top:1px solid #000}
-
-.img-link {
-    display: block;
-    font-size:0;
-}
-.img-link img {
-    font-size:12px;
-}
 .disabled {cursor: default}
-
+.inv {display: none}
+.hidden {visibility: hidden}
 /* ================================ EO Common Styles ================================ */
 
 /* ================================ Layout ================================ */
@@ -58,7 +36,7 @@ body {
 /* ================================ Header ================================ */
 
 header {
-
+    text-align: center;
 }
 
 /* ================================ EO Header ================================ */
@@ -68,25 +46,21 @@ header {
 .content {
 
 }
-.inv {display: none}
-.hidden {visibility: hidden}
-
 .task-title {
     margin-right: 20px;
+}
+.done .task-title {
+    text-decoration: line-through;
 }
 
 /* ================================ EO Content ================================ */
 
-/* ================================ ToDo ================================ */
-
-
-
-/* ================================ EO ToDo ================================ */
 
 /* ================================ Footer ================================ */
 
 footer {
-
+    margin-top: 50px;
+    text-align: center;
 }
 
 /* ================================ EO Footer ================================ */
