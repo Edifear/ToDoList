@@ -13,33 +13,40 @@
             var self = this;
             var $self = $(this);
             var list = $self.find('.task-list');
-            var i = JSON.parse( localStorage.getItem('counter') );
 
 
-            if ( !i || localStorage.length == 1 ) {
-                localStorage.setItem( 'counter', JSON.stringify(1) );
-            } else {
-                fillList();
+            var ToDoList = JSON.parse( localStorage.getItem('ToDo') );
+
+
+            if ( !ToDoList || Object.keys(ToDoList).length == 1 ) {
+                console.log('nema');
+                ToDoList = {'counter':1};
+                uploadToDo();
+            } else fillList();
+
+            var i = ToDoList.counter;
+
+            function uploadToDo(){
+                localStorage.setItem( 'ToDo', JSON.stringify(ToDoList) );
             }
 
-
-            function fillList(){
-                for(var j=0; j<=localStorage.length-1; j++) {
-                    var key = localStorage.key(j);
-                    var title = JSON.parse( localStorage.getItem(key) ).value;
-                    var id = JSON.parse( localStorage.getItem(key) ).id;
-                    if (key.slice(0, 4) != 'task') continue;
+           function fillList(){
+                var keys = Object.keys(ToDoList);
+                for (var j = 0; j < keys.length; j++) {
+                    if (keys[j].slice(0, 4) != 'task') continue;
+                    var title = ToDoList[keys[j]].value;
+                    var id = ToDoList[keys[j]].id;
 
                     addListTask(title, id);
                 }
             }
 
-            function addListTask(title, id) {
-                // var checkbox = "<input type='checkbox' class='toggle'>";
+            function addListTask(title, id){
+                var checkbox = "<input type='checkbox' class='toggle'>";
                 var span = "<span id='task-"+id+"' class='task-title'>"+title+"</span>";
                 var remove = "<a href='#' class='remove'>delete</a>";
 
-                list.append("<li>"+span+remove+"</li>");
+                list.append("<li>"+checkbox+span+remove+"</li>");
             }
 
         //-- create new task
@@ -48,13 +55,12 @@
                 var typedTask = $self.find('#task-input').val();
                 if (!typedTask) return;
 
-                var i = JSON.parse( localStorage.getItem('counter') )
-
-                localStorage.setItem( 'task-'+i, JSON.stringify({'value':typedTask, 'id':i}) );
+                i = ToDoList.counter;
+                ToDoList['task-'+i] = {id: i, value: typedTask};
                 addListTask(typedTask, i);
+                ToDoList.counter++;
 
-                i++;
-                localStorage.setItem( 'counter', JSON.stringify(i) );
+                uploadToDo();
 
                 $self.find('#task-input').val('');
             });
@@ -63,9 +69,10 @@
             list.find('.remove').live('click', function(e){
                 e.preventDefault();
                 var taskId = $(this).siblings('.task-title').attr('id').slice(5);
-
-                localStorage.removeItem("task-"+taskId);
                 $(this).parent().remove();
+
+                delete ToDoList['task-'+taskId];
+                uploadToDo();
             });
 
         };
