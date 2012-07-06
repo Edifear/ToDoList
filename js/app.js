@@ -14,9 +14,7 @@
             var $self = $(this);
             var list = $self.find('.task-list');
 
-
             var ToDoList = JSON.parse( localStorage.getItem('ToDo') );
-
 
             if ( !ToDoList || Object.keys(ToDoList).length == 1 ) {
                 console.log('nema');
@@ -37,12 +35,14 @@
                 uploadToDo();
             }
 
-            function changeStatusTask(task, status){
+            function changeStatusTask(task){
                 var id = task.find('.task-title').attr('id').slice(5);
-                ToDoList['task-'+id].status = status;
+                var status = ToDoList['task-'+id].done;
+                status ? status = false : status = true;
+                ToDoList['task-'+id].done = status;
+
                 uploadToDo();
             }
-
 
             function fillList(){
                 var keys = Object.keys(ToDoList);
@@ -50,26 +50,30 @@
                     if (keys[j].slice(0, 4) != 'task') continue;
                     var title = ToDoList[keys[j]].value;
                     var id = ToDoList[keys[j]].id;
-                    var status = ToDoList[keys[j]].status;
+                    var status = ToDoList[keys[j]].done;
 
                     addListTask(title, id, status);
                 }
             }
 
             function addListTask(title, id, status){
-                if (status == 'done') {
-                    var checked = 'checked';
-                    var done = " class='done'";
-                } else {
-                    var checked = '';
-                    var done = '';
-                }
+                var text = $('<span></span>')
+                    .attr({ id : 'task-'+id })
+                    .addClass('task-title')
+                    .text(title);
 
-                var checkbox = "<input type='checkbox' class='toggle "+checked+"' "+checked+">";
-                var span = "<span id='task-"+id+"' class='task-title'>"+title+"</span>";
-                var remove = "<a href='#' class='remove'>delete</a>";
-                var task = list.append("<li"+done+">"+checkbox+span+remove+"</li>");
+                var checkbox = $('<input>')
+                    .attr({ type : 'checkbox', checked : status})
+                    .addClass('toggle');
 
+                var remove = $('<a></a>')
+                    .attr({ href : '#'})
+                    .addClass('remove')
+                    .text('delete');
+
+                var task = list.append($('<li></li>')
+                    .hide(0, function(){if (status) $(this).addClass('done')})
+                    .append(checkbox, text, remove));
             }
 
         //-- create new task
@@ -79,8 +83,8 @@
                 if (!typedTask) return;
 
                 i = ToDoList.counter;
-                ToDoList['task-'+i] = {id: i, value: typedTask, status: 'non-completed'};
-                addListTask(typedTask, i, 'non-completed');
+                ToDoList['task-'+i] = {id: i, value: typedTask, done: false};
+                addListTask(typedTask, i, false);
                 ToDoList.counter++;
 
                 uploadToDo();
@@ -98,15 +102,8 @@
         //-- done task
             list.find('.toggle').live('click', function(e){
                 var task = $(this).parent();
-                $(this).toggleClass('checked');
                 task.toggleClass('done');
-
-                if ($(this).hasClass('checked')) {
-                    var status = 'done';
-                } else {
-                    var status = 'non-completed'
-                }
-                changeStatusTask(task, status);
+                changeStatusTask(task);
             });
         };
 
