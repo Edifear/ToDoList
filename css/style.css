@@ -82,6 +82,7 @@ header {
 
 .task-list input{
     margin: 10px;
+    vertical-align: top;
 }
 
 .task-title{
@@ -102,9 +103,8 @@ header {
 
 }
 .task-title {
-    /*margin-right: 20px;*/
-    width: 380px;
-    /*display: block;*/
+    display: inline-block;
+    width: 390px;
 }
 .done .task-title {
     text-decoration: line-through;
