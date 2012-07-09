@@ -34,7 +34,7 @@
 
             function removeTask(task){
                 var id = task.find('.task-title').attr('id').slice(5);
-                task.slideUp('slow', function(){task.remove()});
+                task.slideUp(200, function(){task.remove()});
                 delete ToDoList['task-'+id];
 
                 uploadToDo();
@@ -156,6 +156,16 @@
                 task.toggleClass('done');
 
                 changeStatusTask(task);
+                changeTaskLeft();
+            });
+
+        //-- delete done tasks
+            $self.find('.remove-checked').live('click', function(e){
+                e.preventDefault();
+                $self.find('.done').each(function(){
+                    removeTask($(this));
+                });
+
                 changeTaskLeft();
             });
         };
