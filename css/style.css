@@ -100,9 +100,6 @@ header {
 }
 /*======END LIST======*/
 
-.content {
-
-}
 .task-title {
     display: inline-block;
     width: 375px;
@@ -110,6 +107,27 @@ header {
 .done .task-title {
     text-decoration: line-through;
 }
+
+.progress-bar {
+    width: 200px;
+    height: 25px;
+    border: 1px solid #aaa;
+    overflow: hidden;
+}
+
+.progress-status {
+    height: 100%;
+    width: 25%;
+    background: #5a5;
+    border-right: 1px solid #aaa;
+}
+
+.progress-status p {
+    width: 200px;
+    text-align: center;
+    line-height: 25px;
+}
+
 
 /* ================================ EO Content ================================ */
 

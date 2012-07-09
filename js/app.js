@@ -20,7 +20,11 @@
                 console.log('nema');
                 ToDoList = {'counter':1};
                 uploadToDo();
-            } else fillList();
+            } else {
+                fillList();
+                changeTaskLeft();
+            }
+
 
             var i = ToDoList.counter;
 
@@ -32,6 +36,7 @@
                 var id = task.find('.task-title').attr('id').slice(5);
                 task.slideUp('slow', function(){task.remove()});
                 delete ToDoList['task-'+id];
+
                 uploadToDo();
             }
 
@@ -76,6 +81,31 @@
                     .append(checkbox, text, remove));
             }
 
+            function countTasks(){
+                var keys = Object.keys(ToDoList);
+                var a = 0;
+                var b = 0;
+                for (var j = 0; j < keys.length; j++) {
+                    if (keys[j].slice(0, 4) != 'task') continue;
+                    a++;
+                    var status = ToDoList[keys[j]].done;
+                    if (status) b++;
+                }
+                return {'total':a, 'done':b};
+            }
+
+        //-- fill task progress-bar
+            function changeTaskLeft(){
+                var total = countTasks().total;
+                var done = countTasks().done;
+                var persent = (done/total)*100;
+
+                $self.find('.tasks-left').text(done);
+                $self.find('.tasks-total').text(total);
+                $self.find('.progress-status').width(persent+'%');
+
+            }
+
         //-- create new task
             $self.find('#task-submit').live('click', function(e){
                 e.preventDefault();
@@ -87,6 +117,7 @@
                 addListTask(typedTask, i, false);
                 ToDoList.counter++;
 
+                changeTaskLeft();
                 uploadToDo();
 
                 $self.find('#task-input').val('');
@@ -96,14 +127,18 @@
             list.find('.remove').live('click', function(e){
                 e.preventDefault();
                 var task = $(this).parent();
+
                 removeTask(task);
+                changeTaskLeft();
             });
 
         //-- done task
             list.find('.toggle').live('click', function(e){
                 var task = $(this).parent();
                 task.toggleClass('done');
+
                 changeStatusTask(task);
+                changeTaskLeft();
             });
         };
 
