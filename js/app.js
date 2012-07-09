@@ -94,16 +94,34 @@
                 return {'total':a, 'done':b};
             }
 
+        //-- color progress-bar
+            function colorProgress(r1,r2,r3,g1,g2,g3,b1,b2,b3,persent){
+                function pal(c1,c2){
+                    return (Math.floor((c2-c1)*(persent/100))+c1);
+                }
+
+                if (persent >= 0 && persent <= 50) {
+                    persent = persent*2;
+                    return ({'r':pal(r1,r2),'g': pal(g1,g2),'b': pal(b1,b2)});
+                }
+                else if (persent > 50 && persent <= 100) {
+                     return ({'r': pal(r2,r3),'g': pal(g2,g3),'b': pal(b2,b3)});
+                }
+            }
+
         //-- fill task progress-bar
             function changeTaskLeft(){
                 var total = countTasks().total;
                 var done = countTasks().done;
                 var persent = (done/total)*100;
+                var color = colorProgress(187,252,15,0,231,211,0,0,0,persent);
 
                 $self.find('.tasks-left').text(done);
                 $self.find('.tasks-total').text(total);
-                $self.find('.progress-status').width(persent+'%');
-
+                $self.find('.progress-status').css({
+                    'width': persent+"%",
+                    'background': "rgb("+color.r.toString()+","+color.g.toString()+","+color.b.toString()+")"
+                });
             }
 
         //-- create new task

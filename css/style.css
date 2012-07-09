@@ -117,9 +117,10 @@ header {
 
 .progress-status {
     height: 100%;
-    width: 25%;
     background: #5a5;
     border-right: 1px solid #aaa;
+    -webkit-transition:all .5s ease-in;
+    transition:all .5s ease-in;
 }
 
 .progress-status p {
