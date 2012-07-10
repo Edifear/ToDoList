@@ -104,7 +104,10 @@ header {
 .task-title {
     display: inline-block;
     width: 352px;
+    text-align: left;
+    font-size: 13px;
 }
+
 .done .task-title {
     text-decoration: line-through;
 }
