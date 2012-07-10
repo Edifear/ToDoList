@@ -53,12 +53,22 @@ header {
 }
 
 .add{
-    width: 438px;
+    width: 383px;
     height:38px;
-    border: 1px solid #d0d0d0;
+    border: 1px solid #58a3c7;
     text-align: center;
     font: italic 18px Arial, sans-serif;
     color: #08638e;
+}
+
+.add-btn{
+    height: 42px;
+    border: 1px solid #58a3c7;
+    background-color: #58a3c7;
+    font: italic 18px/40px Arial, sans-serif;
+    color: #fff;
+    margin: 0;
+    padding: 0 16px;
 }
 
 /*======LIST======*/
@@ -96,8 +106,25 @@ header {
     width: 12px;
     height: 13px;
     text-indent: -9999px;
-    background: url(../images/sprite.png) no-repeat;
+    background: url(../images/sprite.png) no-repeat 0 -11px;
     margin: 9px 10px 0 10px;
+}
+
+.remove:hover{
+    background: url(../images/sprite.png) no-repeat 0 0;
+}
+
+.edit{
+    float: right;
+    width: 12px;
+    height: 13px;
+    text-indent: -9999px;
+    background: url(../images/sprite.png) no-repeat 0 -34px;
+    margin: 9px 0 0 10px;
+}
+
+.edit:hover{
+    background: url(../images/sprite.png) no-repeat 0 -22px;
 }
 /*======END LIST======*/
 
