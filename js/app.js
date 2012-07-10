@@ -34,7 +34,7 @@
 
             function removeTask(task){
                 var id = task.find('.task-title').attr('id').slice(5);
-                task.slideUp(200, function(){task.remove()});
+                task.slideUp(500, function(){task.remove()});
                 delete ToDoList['task-'+id];
 
                 uploadToDo();
@@ -76,9 +76,14 @@
                     .addClass('remove')
                     .text('delete');
 
+                var edit = $('<a></a>')
+                    .attr({ href : '#'})
+                    .addClass('edit')
+                    .text('edit');
+
                 var task = list.append($('<li></li>')
                     .hide(0, function(){if (status) $(this).addClass('done')})
-                    .append(checkbox, text, remove));
+                    .append(checkbox, text, remove, edit));
             }
 
             function countTasks(){
@@ -113,6 +118,12 @@
             function changeTaskLeft(){
                 var total = countTasks().total;
                 var done = countTasks().done;
+                console.log(done);
+                if (!done){
+                    $self.find('.bottom').fadeOut('500')
+                } else {
+                    $self.find('.bottom').fadeIn('500')
+                }
                 var persent = (done/total)*100;
                 var color = colorProgress(187,252,15,0,231,211,0,0,0,persent);
 

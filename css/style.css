@@ -87,8 +87,11 @@ header {
 
 }
 
+.edit {
+    float: right;
+}
+
 .remove{
-    display: block;
     float: right;
     width: 12px;
     height: 13px;
@@ -100,10 +103,14 @@ header {
 
 .task-title {
     display: inline-block;
-    width: 375px;
+    width: 352px;
 }
 .done .task-title {
     text-decoration: line-through;
+}
+
+.bottom {
+    display: none;
 }
 
 .progress-bar {
