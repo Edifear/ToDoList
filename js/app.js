@@ -61,6 +61,13 @@
                 }
                 uploadToDo();
             }
+        //--func. save edited task and remove focus
+            function saveEditedTask(task) {
+                var newValue = task.find('.task-title').text();
+
+                changeValueTask(task, newValue);
+                list.find('.task-title').attr('contenteditable', 'false').removeClass('editing');
+            }
 
         //--func. fill html list
             function fillList(){
@@ -78,7 +85,7 @@
                 var text = $('<span></span>')
                     .attr({ id : 'task-'+id, contenteditable : false, spellcheck : 'false' })
                     .addClass('task-title')
-                    .html(title);
+                    .text(title);
 
                 var checkbox = $('<input>')
                     .attr({ type : 'checkbox', checked : status})
@@ -182,11 +189,17 @@
             });
             $self.find('.task-title').blur(function() {
                 var task = $(this).parent();
-                var newValue = $(this).html();
-
-                changeValueTask(task, newValue);
-                list.find('.task-title').attr('contenteditable', 'false').removeClass('editing');
+                saveEditedTask(task);
             });
+            $self.find('.task-title').on('keydown', function(e) {
+                var code = (e.keyCode ? e.keyCode : e.which);
+                if (code == 13 && !e.shiftKey) {
+                    e.preventDefault();
+                    var task = $(this).parent();
+                    saveEditedTask(task);
+                }
+            });
+
 
         //-- delete task
             list.find('.remove').live('click', function(e){
