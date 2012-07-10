@@ -20,14 +20,14 @@
 /* ================================ Layout ================================ */
 
 body {
-    background-color: #aaa;
+    background-color: #499cc1;
     text-align: left;
     color: #333;
 }
 .wrapper {
     position: relative;
     width: 500px;
-    margin:0 auto;
+    margin:10px auto;
     background: #fcfcfc;
     border: 1px solid #bebebe;
 }
@@ -164,6 +164,16 @@ header {
     line-height: 25px;
 }
 
+
+.remove-checked{
+    text-decoration: none;
+    float: left;
+    background: #4a9ac0 url("../images/sprite.png") no-repeat 0 -47px;
+    font: 14px Arial, sans-serif;
+    color: #fff;
+    padding: 10px 10px 10px 30px;
+    margin: 10px 0 0 0;
+}
 
 /* ================================ EO Content ================================ */
 
