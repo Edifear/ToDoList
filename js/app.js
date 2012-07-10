@@ -6,7 +6,7 @@
 
         $.fn.ToDoList = function(options){
             if (typeof(localStorage) == 'undefined' ) {
-                alert('Your browser does not support HTML5 localStorage. Try upgrading.');
+                alert('Your browser does not support HTML5 localStorage. Try upgrading.');  //-- localstorage comp. check
                 return;
             }
 
@@ -14,10 +14,9 @@
             var $self = $(this);
             var list = $self.find('.task-list');
 
-            var ToDoList = JSON.parse( localStorage.getItem('ToDo') );
+            var ToDoList = JSON.parse( localStorage.getItem('ToDo') );  //-- parse ToDoList from localstorage
 
-            if ( !ToDoList || Object.keys(ToDoList).length == 1 ) {
-                console.log('nema');
+            if ( !ToDoList || Object.keys(ToDoList).length == 1 ) { //-- reset the counter
                 ToDoList = {'counter':1};
                 uploadToDo();
             } else {
@@ -25,13 +24,16 @@
                 changeTaskLeft();
             }
 
+            var i = ToDoList.counter;   //-- counter
 
-            var i = ToDoList.counter;
+    //--- FUNCTIONS
 
+        //--func. upload ToDoList to localstorage
             function uploadToDo(){
                 localStorage.setItem( 'ToDo', JSON.stringify(ToDoList) );
             }
 
+        //--func. remove task from ToDoList
             function removeTask(task){
                 var id = task.find('.task-title').attr('id').slice(5);
                 task.slideUp(500, function(){task.remove()});
@@ -40,6 +42,7 @@
                 uploadToDo();
             }
 
+        //--func. change task status
             function changeStatusTask(task){
                 var id = task.find('.task-title').attr('id').slice(5);
                 var status = ToDoList['task-'+id].done;
@@ -49,6 +52,17 @@
                 uploadToDo();
             }
 
+        //--func. change task-title
+            function changeValueTask(task, newValue) {
+                var id = task.find('.task-title').attr('id').slice(5);
+                var value = ToDoList['task-'+id].value;
+                if (value != newValue) {
+                    ToDoList['task-'+id].value = newValue;
+                }
+                uploadToDo();
+            }
+
+        //--func. fill html list
             function fillList(){
                 var keys = Object.keys(ToDoList);
                 for (var j = 0; j < keys.length; j++) {
@@ -60,12 +74,11 @@
                     addListTask(title, id, status);
                 }
             }
-
             function addListTask(title, id, status){
                 var text = $('<span></span>')
-                    .attr({ id : 'task-'+id })
+                    .attr({ id : 'task-'+id, contenteditable : false, spellcheck : 'false' })
                     .addClass('task-title')
-                    .text(title);
+                    .html(title);
 
                 var checkbox = $('<input>')
                     .attr({ type : 'checkbox', checked : status})
@@ -86,6 +99,7 @@
                     .append(checkbox, text, remove, edit));
             }
 
+        //--func. count tasks in ToDoList
             function countTasks(){
                 var keys = Object.keys(ToDoList);
                 var a = 0;
@@ -99,7 +113,7 @@
                 return {'total':a, 'done':b};
             }
 
-        //-- color progress-bar
+        //--func. get gradient from 3 colors
             function colorProgress(r1,r2,r3,g1,g2,g3,b1,b2,b3,persent){
                 function pal(c1,c2){
                     return (Math.floor((c2-c1)*(persent/100))+c1);
@@ -114,16 +128,18 @@
                 }
             }
 
-        //-- fill task progress-bar
+        //--func. fill task progress-bar
             function changeTaskLeft(){
                 var total = countTasks().total;
                 var done = countTasks().done;
-                console.log(done);
+
                 if (!done){
                     $self.find('.bottom').fadeOut('500')
                 } else {
                     $self.find('.bottom').fadeIn('500')
                 }
+                if (!total) return;
+
                 var persent = (done/total)*100;
                 var color = colorProgress(187,252,15,0,231,211,0,0,0,persent);
 
@@ -131,9 +147,11 @@
                 $self.find('.tasks-total').text(total);
                 $self.find('.progress-status').css({
                     'width': persent+"%",
-                    'background': "rgb("+color.r.toString()+","+color.g.toString()+","+color.b.toString()+")"
+                    'background-color': "rgba("+color.r.toString()+","+color.g.toString()+","+color.b.toString()+", 0.7)"
                 });
             }
+
+    //--- EVENTS
 
         //-- create new task
             $self.find('#task-submit').live('click', function(e){
@@ -149,7 +167,25 @@
                 changeTaskLeft();
                 uploadToDo();
 
-                $self.find('#task-input').val('');
+                $self.find('#task-input').val('').focus();
+            });
+
+        //-- edit task
+            list.find('.edit').live('click', function(e) {
+                e.preventDefault();
+                var editable = $(this).siblings('.task-title').attr('contenteditable');
+
+                var title =  $(this).siblings('.task-title');
+
+                list.find('.task-title').attr('contenteditable', 'false').removeClass('editing');
+                title.attr('contenteditable', 'true').addClass('editing').focus();
+            });
+            $self.find('.task-title').blur(function() {
+                var task = $(this).parent();
+                var newValue = $(this).html();
+
+                changeValueTask(task, newValue);
+                list.find('.task-title').attr('contenteditable', 'false').removeClass('editing');
             });
 
         //-- delete task
