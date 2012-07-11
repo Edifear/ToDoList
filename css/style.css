@@ -156,11 +156,9 @@ header {
 }
 /* ======EO LIST====== */
 
-.bottom {
-    display: none;
-}
 
 .progress-bar {
+    display: none;
     float: left;
     width: 200px;
     height: 26px;
@@ -187,6 +185,7 @@ header {
 }
 
 .remove-checked {
+    display: none;
     text-decoration: none;
     float: right;
     background: #4a9ac0;

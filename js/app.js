@@ -141,11 +141,17 @@
                 var done = countTasks().done;
 
                 if (!done){
-                    $self.find('.bottom').fadeOut('500')
+                    $self.find('.remove-checked').fadeOut('500')
                 } else {
-                    $self.find('.bottom').fadeIn('500')
+                    $self.find('.remove-checked').fadeIn('500')
                 }
-                if (!total) return;
+
+                if (!total) {
+                    $self.find('.progress-bar').fadeOut('500');
+                    return;
+                } else {
+                    $self.find('.progress-bar').fadeIn('500')
+                }
 
                 var persent = (done/total)*100;
                 var color = colorProgress(187,252,15,0,231,211,0,0,0,persent);
