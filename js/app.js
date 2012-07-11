@@ -3,7 +3,6 @@
 
     $(document).ready(function(){
 
-
         $.fn.ToDoList = function(options){
             if (typeof(localStorage) == 'undefined' ) {
                 alert('Your browser does not support HTML5 localStorage. Try upgrading.');  //-- localstorage comp. check
@@ -81,6 +80,7 @@
                     addListTask(title, id, status);
                 }
             }
+        //--func. create task
             function addListTask(title, id, status){
                 var text = $('<span></span>')
                     .attr({ id : 'task-'+id, contenteditable : false, spellcheck : 'false' })
@@ -102,8 +102,13 @@
                     .text('edit');
 
                 var task = list.append($('<li></li>')
-                    .hide(0, function(){if (status) $(this).addClass('done')})
+                    .hide(0, function(){
+                        if (status) $(this).addClass('done');
+                        find($(this));
+                    })
                     .append(checkbox, text, remove, edit));
+
+
             }
 
         //--func. count tasks in ToDoList
@@ -193,9 +198,10 @@
                 list.find('.task-title').attr('contenteditable', 'false').removeClass('editing');
                 title.attr('contenteditable', 'true').addClass('editing').focus();
             });
-            $self.find('.task-title').blur(function() {
+            $('.task-list').on('focusout', '.task-title', function() {
                 var task = $(this).parent();
                 saveEditedTask(task);
+                console.log($(this));
             });
             $self.find('.task-title').on('keydown', function(e) {
                 var code = (e.keyCode ? e.keyCode : e.which);
