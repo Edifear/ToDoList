@@ -191,8 +191,6 @@
         //-- edit task
             list.find('.edit').live('click', function(e) {
                 e.preventDefault();
-                var editable = $(this).siblings('.task-title').attr('contenteditable');
-
                 var title =  $(this).siblings('.task-title');
 
                 list.find('.task-title').attr('contenteditable', 'false').removeClass('editing');
@@ -201,9 +199,8 @@
             $('.task-list').on('focusout', '.task-title', function() {
                 var task = $(this).parent();
                 saveEditedTask(task);
-                console.log($(this));
             });
-            $self.find('.task-title').on('keydown', function(e) {
+            $('.task-list').on('keydown', '.task-title', function(e) {
                 var code = (e.keyCode ? e.keyCode : e.which);
                 if (code == 13 && !e.shiftKey) {
                     e.preventDefault();
