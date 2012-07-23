@@ -167,6 +167,12 @@
                     'width': persent+"%",
                     'background-color': "rgba("+color.r.toString()+","+color.g.toString()+","+color.b.toString()+", 0.7)"
                 });
+
+                if (!(total-done)) {
+                    chrome.browserAction.setBadgeText({text: ''});
+                } else {
+                    chrome.browserAction.setBadgeText({text: String(total-done)});
+                }
             }
 
     //--- EVENTS
@@ -240,6 +246,9 @@
         };
 
         $('.ToDo').ToDoList();
+
+    //--Budge Text
+        chrome.browserAction.setBadgeBackgroundColor({color: [255, 0, 0, 255]});
 
     });
 }(jQuery);

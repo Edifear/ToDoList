@@ -35,7 +35,7 @@ body {
 .wrapper {
     position: relative;
     width: 500px;
-    margin:100px auto;
+    margin:0 auto;
     background: #fcfcfc;
 }
 
