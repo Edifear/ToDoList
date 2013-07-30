@@ -4,32 +4,38 @@
     $(document).ready(function(){
 
         $.fn.ToDoList = function(options){
-            if (typeof(localStorage) == 'undefined' ) {
-                alert('Your browser does not support HTML5 localStorage. Try upgrading.');  //-- localstorage comp. check
-                return;
-            }
+            var self = this,
+                $self = $(this),
+                list = $self.find('.task-list'),
+                ToDoList,
+                i; //-- counter
 
-            var self = this;
-            var $self = $(this);
-            var list = $self.find('.task-list');
+            chrome.storage.sync.get("ToDo", function(response) {
 
-            var ToDoList = JSON.parse( localStorage.getItem('ToDo') );  //-- parse ToDoList from localstorage
+                if ( Object.keys(response).length === 0 ) { //-- reset the counter
+                    ToDoList = {'counter':1};
+                    uploadToDo();
+                } else if ( !!response.ToDo ) {
+                    if (Object.keys(response.ToDo).length === 1) {
+                        ToDoList = {'counter':1};
+                        uploadToDo();
+                    } else {
+                        ToDoList = response.ToDo;
+                        fillList();
+                        changeTaskLeft();
+                    }
+                }
 
-            if ( !ToDoList || Object.keys(ToDoList).length == 1 ) { //-- reset the counter
-                ToDoList = {'counter':1};
-                uploadToDo();
-            } else {
-                fillList();
-                changeTaskLeft();
-            }
-
-            var i = ToDoList.counter;   //-- counter
+                i = ToDoList.counter;   //-- counter
+            });
 
     //--- FUNCTIONS
 
         //--func. upload ToDoList to localstorage
             function uploadToDo(){
-                localStorage.setItem( 'ToDo', JSON.stringify(ToDoList) );
+                // localStorage.setItem( 'ToDo', JSON.stringify(ToDoList) );
+                chrome.storage.sync.set({"ToDo": ToDoList}, function() {
+                });
             }
 
         //--func. remove task from ToDoList
@@ -39,6 +45,7 @@
                 delete ToDoList['task-'+id];
 
                 uploadToDo();
+                changeTaskLeft();
             }
 
         //--func. change task status
@@ -73,9 +80,9 @@
                 var keys = Object.keys(ToDoList);
                 for (var j = 0; j < keys.length; j++) {
                     if (keys[j].slice(0, 4) != 'task') continue;
-                    var title = ToDoList[keys[j]].value;
-                    var id = ToDoList[keys[j]].id;
-                    var status = ToDoList[keys[j]].done;
+                    var title = ToDoList[keys[j]].value,
+                        id = ToDoList[keys[j]].id,
+                        status = ToDoList[keys[j]].done;
 
                     addListTask(title, id, status);
                 }
@@ -142,13 +149,19 @@
 
         //--func. fill task progress-bar
             function changeTaskLeft(){
-                var total = countTasks().total;
-                var done = countTasks().done;
+                var total = countTasks().total,
+                    done = countTasks().done;
 
                 if (!done){
                     $self.find('.remove-checked').fadeOut('500')
                 } else {
                     $self.find('.remove-checked').fadeIn('500')
+                }
+
+                if ((total - done) == 0) {
+                    chrome.browserAction.setBadgeText({text: ''});
+                } else {
+                    chrome.browserAction.setBadgeText({text: String(total-done)});
                 }
 
                 if (!total) {
@@ -168,11 +181,6 @@
                     'background-color': "rgba("+color.r.toString()+","+color.g.toString()+","+color.b.toString()+", 0.7)"
                 });
 
-                if (!(total-done)) {
-                    chrome.browserAction.setBadgeText({text: ''});
-                } else {
-                    chrome.browserAction.setBadgeText({text: String(total-done)});
-                }
             }
 
     //--- EVENTS
